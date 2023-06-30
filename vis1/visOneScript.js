@@ -1,3 +1,12 @@
+// Question 1: Can we visualize how global life expectancies have changed between 2000-2015?
+// We can see that life expectancies among countries in the developed world are largely static but those
+// in the developing world tend to shift over time.
+
+// Question 2: Which countries have the highest average life expectancies?  Which countries have the lowest?
+// From the map we can see that countries like Canada, Japan, Australia and the Scandinavian countries 
+// have the highest average life expectancies, while countries in sub-Saharan Africa have the lowest average 
+// life expectancies.
+
 async function loadMap() {
   let data = await d3.csv('../who-life-expectancy.csv');
 
@@ -46,30 +55,6 @@ async function loadMap() {
     .text('');
   
   function update(year) {
-
-    let mouseOver = function(d) {
-      d3.selectAll(".Country")
-        .transition()
-        .duration(200)
-        .style("opacity", .5)
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .style("opacity", 1)
-        .style("stroke", "black")
-    }
-  
-    let mouseLeave = function(d) {
-      d3.selectAll(".Country")
-        .transition()
-        .duration(200)
-        .style("opacity", .8)
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .style("stroke", "transparent")
-    }
-  
     data = dataByYear[year];
 
     const minLifeExpectancy = d3.min(data, d => d.lifeExpectancy);
@@ -80,9 +65,7 @@ async function loadMap() {
       .interpolator(d3.interpolateViridis)
       .domain([maxLifeExpectancy, minLifeExpectancy]);
 
-    console.log(year);
     yearData = dataByYear[year];
-    console.log(yearData);
 
     // Update existing paths
     paths = g.selectAll('path')
@@ -151,6 +134,15 @@ async function loadMap() {
       gradient.append("stop")
         .attr("offset", "85%")
         .attr("stop-color", colorScale.range()[0]);
+
+      // Add legend title
+      const legendTitle = svg.append('text')
+        .attr('class', 'chart-title')
+        .attr('x', width - 190)
+        .attr('y', height - 330)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '16px')
+        .text('Average life expectancy');
     }
   }
 
